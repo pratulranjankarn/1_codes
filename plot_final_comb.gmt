@@ -1,0 +1,432 @@
+#!/bin/bash
+
+# Z = [70.0000 50.0000 30.0000 10.0000]
+Z="10.0000"
+Zlo="0"
+Zhi="20"
+ind="1"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 10p,Helvetica-Bold,black
+
+gmt set FONT_ANNOT_PRIMARY = 10p,Helvetica-Bold,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+grep "${Z}" nodes_24e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test24.txt
+
+MASK="new24_1.nc"
+GRID="SAegean_grd24_1.nc"
+
+#gmt grdmask test24.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test24.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+PS1=map_pmin2.ps
+REGION="20/29.5/34.5/39.5"
+SCALE=0.23i
+CPT="custom.cpt"
+
+gmt makecpt -Chot -Ic -T0.00/0.25/0.025 > $CPT
+
+rm -f $PS1
+
+gmt grdmath $GRID $MASK OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:WesN -n+c -V -K -Q -Y16.6 -X1.0 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "2-4 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(a)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_48e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test48.txt
+
+MASK="new48_1.nc"
+GRID="SAegean_grd48_1.nc"
+
+#gmt grdmask test48.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test48.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output48.grd
+
+gmt grdimage output48.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wesN -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "4-8 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(b)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_816e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test816.txt
+
+MASK="new816_1.nc"
+GRID="SAegean_grd816_1.nc"
+
+#gmt grdmask test816.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test816.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output816.grd
+
+gmt grdimage output816.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wesN -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "8-16 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(c)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_1632e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test1632.txt
+
+MASK="new1632_1.nc"
+GRID="SAegean_grd1632_1.nc"
+
+#gmt grdmask test1632.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test1632.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output1632.grd
+
+gmt grdimage output1632.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wEsN -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "16-32 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(d)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+#: << SOD
+
+# Z = [70.0000 50.0000 30.0000 10.0000]
+Z="30.0000"
+Zlo="20"
+Zhi="40"
+ind="2"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 10p,Helvetica-Bold,black
+
+gmt set FONT_ANNOT_PRIMARY = 10p,Helvetica-Bold,black
+
+#gmt set MAP_FRAME_TYPE = plain
+
+grep "${Z}" nodes_24e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test24.txt
+
+MASK="new24_2.nc"
+GRID="SAegean_grd24_2.nc"
+
+#gmt grdmask test24.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test24.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:Wesn -n+c -V -O -K -Q -Y-4.6 -X-19.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "2-4 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(e)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_48e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test48.txt
+
+MASK="new48_2.nc"
+GRID="SAegean_grd48_2.nc"
+
+#gmt grdmask test48.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test48.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output48.grd
+
+gmt grdimage output48.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wesn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "4-8 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(f)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_816e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test816.txt
+
+MASK="new816_2.nc"
+GRID="SAegean_grd816_2.nc"
+
+#gmt grdmask test816.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test816.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output816.grd
+
+gmt grdimage output816.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wesn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "8-16 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(g)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_1632e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test1632.txt
+
+MASK="new1632_2.nc"
+GRID="SAegean_grd1632_2.nc"
+
+#gmt grdmask test1632.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test1632.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output1632.grd
+
+gmt grdimage output1632.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wEsn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "16-32 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(h)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+#: << SOD
+
+# Z = [70.0000 50.0000 30.0000 10.0000]
+Z="50.0000"
+Zlo="40"
+Zhi="60"
+ind="3"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 10p,Helvetica-Bold,black
+
+gmt set FONT_ANNOT_PRIMARY = 10p,Helvetica-Bold,black
+
+#gmt set MAP_FRAME_TYPE = fancy
+
+grep "${Z}" nodes_24e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test24.txt
+
+MASK="new24_3.nc"
+GRID="SAegean_grd24_3.nc"
+
+#gmt grdmask test24.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test24.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:Wesn -n+c -V -O -K -Q -Y-4.6 -X-19.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "2-4 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(i)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_48e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test48.txt
+
+MASK="new48_3.nc"
+GRID="SAegean_grd48_3.nc"
+
+#gmt grdmask test48.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test48.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output48.grd
+
+gmt grdimage output48.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wesn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "4-8 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(j)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_816e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test816.txt
+
+MASK="new816_3.nc"
+GRID="SAegean_grd816_3.nc"
+
+#gmt grdmask test816.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test816.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output816.grd
+
+gmt grdimage output816.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wesn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "8-16 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(k)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_1632e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test1632.txt
+
+MASK="new1632_3.nc"
+GRID="SAegean_grd1632_3.nc"
+
+#gmt grdmask test1632.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test1632.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output1632.grd
+
+gmt grdimage output1632.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wEsn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "16-32 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(l)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+# Z = [70.0000 50.0000 30.0000 10.0000]
+Z="70.0000"
+Zlo="60"
+Zhi="80"
+ind="4"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 10p,Helvetica-Bold,black
+
+gmt set FONT_ANNOT_PRIMARY = 10p,Helvetica-Bold,black
+
+#gmt set MAP_FRAME_TYPE = fancy
+
+grep "${Z}" nodes_24e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test24.txt
+
+MASK="new24_4.nc"
+GRID="SAegean_grd24_4.nc"
+
+#gmt grdmask test24.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test24.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:WeSn -n+c -V -O -K -Q -Y-4.6 -X-19.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "2-4 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(m)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_48e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test48.txt
+
+MASK="new48_4.nc"
+GRID="SAegean_grd48_4.nc"
+
+#gmt grdmask test48.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test48.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output48.grd
+
+gmt grdimage output48.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:weSn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "4-8 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(n)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_816e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test816.txt
+
+MASK="new816_4.nc"
+GRID="SAegean_grd816_4.nc"
+
+#gmt grdmask test816.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test816.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output816.grd
+
+gmt grdimage output816.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:weSn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "8-16 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(o)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_1632e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test1632.txt
+
+MASK="new1632_4.nc"
+GRID="SAegean_grd1632_4.nc"
+
+#gmt grdmask test1632.txt -R -I0.01=/0.01= -NNaN/1/1 -G$MASK -S15.726k -V
+#gmt surface test1632.txt -R -I0.01=/0.01= -G$GRID -T1.0 -V
+
+gmt grdmath $GRID $MASK OR = output1632.grd
+
+gmt grdimage output1632.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a2/f0.5a1:.:wESn -n+c -V -O -K -Q -Y0.0 -X6.5 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28.5/35.2+c37+w100+ar+f -V -O -K >> $PS1
+
+echo "Km" | gmt pstext -R -J -DJ0.62/0.95 -F+cBR+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "$Zlo"-"$Zhi" "km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+#echo "16-32 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+echo "(p)" | gmt pstext -R -J -DJ-0.5/6.0 -F+cTL+f8p,Helvetica-Bold,black -O -V -K >> $PS1
+
+#SOD
+
+gmt set FONT_LABEL = 15p,Helvetica-Bold,black
+
+gmt set FONT_ANNOT_PRIMARY = 15p,Helvetica-Bold,black
+
+gmt psscale -DjRB+h+w3.0i/0.2i+o9.0/-1.5 -R -J -B0.05 -By+l"@~D@~log t@-p@-" -C$CPT -O -V >> $PS1
+
+gmt psconvert $PS1 -A+m3c/3c/3c/3c -Tejf
+
+gmt psconvert $PS1 -A+m3c/3c/3c/3c -Tg
+
+evince $PS1
