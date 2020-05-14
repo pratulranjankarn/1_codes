@@ -1,0 +1,106 @@
+#!/bin/bash
+
+export HDF5_DISABLE_VERSION_CHECK=2
+
+# Z = [70.0000 50.0000 30.0000 10.0000]
+Z="70.0000"
+Zlo="60"
+Zhi="80"
+ind="4"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+grep "${Z}" nodes_24e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test24.txt
+
+gmt grdmask test24.txt -R -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15.726k -V
+gmt surface test24.txt -R -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V
+
+PS1=map_pmin_${ind}.ps
+REGION="20/29.5/34.5/39.5"
+SCALE=0.48i
+GRID="SAegean_grd24.nc"
+CPT="custom.cpt"
+
+gmt makecpt -Cno_green -T-0.05/0.05/0.0025 > $CPT
+
+rm -f $PS1
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:Wesn -n+c -V -K -Q -Y11.0 -X1.0 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 2-4 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_48e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test48.txt
+
+gmt grdmask test48.txt -R -I0.01=/0.01= -NNaN/1/1 -Gnew48.nc -S15.726k -V
+gmt surface test48.txt -R -I0.01=/0.01= -GSAegean_grd48.nc -T1.0 -V
+
+GRID="SAegean_grd48.nc"
+
+gmt grdmath $GRID new48.nc OR = output48.grd
+
+gmt grdimage output48.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:wesn -n+c -V -O -K -Q -Y0.0 -X13.3 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 4-8 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_816e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test816.txt
+
+gmt grdmask test816.txt -R -I0.01=/0.01= -NNaN/1/1 -Gnew816.nc -S15.726k -V
+gmt surface test816.txt -R -I0.01=/0.01= -GSAegean_grd816.nc -T1.0 -V
+
+GRID="SAegean_grd816.nc"
+
+gmt grdmath $GRID new816.nc OR = output816.grd
+
+gmt grdimage output816.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:WeSn -n+c -V -O -K -Q -Y-10.0 -X-13.3 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 8-16 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+grep "${Z}" nodes_1632e.txt > temp.txt
+
+awk '{ if ($5 > 4) print $3,$2,$6}' temp.txt > test1632.txt
+
+gmt grdmask test1632.txt -R -I0.01=/0.01= -NNaN/1/1 -Gnew1632.nc -S15.726k -V
+gmt surface test1632.txt -R -I0.01=/0.01= -GSAegean_grd1632.nc -T1.0 -V
+
+GRID="SAegean_grd1632.nc"
+
+gmt grdmath $GRID new1632.nc OR = output1632.grd
+
+gmt grdimage output1632.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:weSn -n+c -V -O -K -Q -Y0.0 -X13.3 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 16-32 Hz" | gmt pstext -R -J -DJ0.5/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+gmt psscale -DjRB+h+w2.5i/0.2i+o9.2/9.15 -R -J -B0.025:"Delta Log(Tp)": -C$CPT -O -V >> $PS1
+
+gmt psconvert $PS1 -A+m3c/3c/3c/3c -Tg
+
+

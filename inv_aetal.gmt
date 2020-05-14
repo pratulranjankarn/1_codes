@@ -1,0 +1,136 @@
+#!/bin/bash
+rm -f new24.nc SAegean_grd24.nc output24.grd
+# Z = [90.0000 70.0000 50.0000 30.0000 10.0000]
+Z="10"
+Zlo="0"
+Zhi="20"
+ind="1"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+PS1=aetal_invfyn.ps
+REGION="20/29.5/34.5/39.5"
+SCALE=0.48i
+GRID="SAegean_grd24.nc"
+CPT="custom.cpt"
+
+awk '{print $2,$1,$3}' aetal_f${Z}.txt > test.txt
+
+gmt grdmask test.txt -R$REGION -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15.726k -V
+gmt surface test.txt -R$REGION -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V 
+
+
+gmt makecpt -Cno_green -T-6.00/-1.00/0.05 -Z > $CPT
+
+rm -f $PS1
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:Wesn -n+c -V -K -Q -Y11.0 -X1.0 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+rm -f new24.nc SAegean_grd24.nc output24.grd
+# Z = [90.0000 70.0000 50.0000 30.0000 10.0000]
+Z="30"
+Zlo="20"
+Zhi="40"
+ind="2"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+
+awk '{print $2,$1,$3}' aetal_f${Z}.txt > test.txt
+
+
+gmt grdmask test.txt -R$REGION -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15.726k -V
+gmt surface test.txt -R$REGION -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V 
+
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:wesn -n+c -O -V -K -Q -Y0.0 -X13.3 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+rm -f new24.nc SAegean_grd24.nc output24.grd
+# Z = [90.0000 70.0000 50.0000 30.0000 10.0000]
+Z="50"
+Zlo="40"
+Zhi="60"
+ind="3"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+awk '{print $2,$1,$3}' aetal_f${Z}.txt > test.txt
+
+gmt grdmask test.txt -R$REGION -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15.726k -V
+gmt surface test.txt -R$REGION -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V 
+
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:WeSn -n+c -O -V -K -Q -Y-10.0 -X-13.3 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+rm -f new24.nc SAegean_grd24.nc output24.grd
+# Z = [90.0000 70.0000 50.0000 30.0000 10.0000]
+Z="70"
+Zlo="60"
+Zhi="80"
+ind="4"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+awk '{print $2,$1,$3}' aetal_f${Z}.txt > test.txt
+
+gmt grdmask test.txt -R$REGION -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15.726k -V
+gmt surface test.txt -R$REGION -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V 
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:weSn -n+c -O -V -K -Q -Y0.0 -X13.3 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.5/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+gmt psscale -DjRB+h+w2.5i/0.2i+o9.2/9.0 -R -J -B1.0 -C$CPT -O -V >> $PS1
+
+gmt psconvert $PS1 -A+m3c/3c/3c/3c -Tg
+

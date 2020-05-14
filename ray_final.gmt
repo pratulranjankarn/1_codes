@@ -1,0 +1,334 @@
+#!/bin/bash
+
+export HDF5_DISABLE_VERSION_CHECK=2
+
+#: <<SOD
+
+matlab -nosplash -nodesktop << EOF
+fid = fopen('st_delay15.txt','r');
+A = textscan(fid,'%s %f %f %f %f %f %f %f %f %f','Headerlines',1);
+fclose(fid);
+
+fid = fopen('parm_24.txt','r');
+parm24 = textscan(fid,'%f');
+fclose(fid);
+trcpt24 = parm24{1}(1);
+slpe24 = parm24{1}(2);
+
+fid = fopen('parm_48.txt','r');
+parm48 = textscan(fid,'%f');
+fclose(fid);
+trcpt48 = parm48{1}(1);
+slpe48 = parm48{1}(2);
+
+fid = fopen('parm_816.txt','r');
+parm816 = textscan(fid,'%f');
+fclose(fid);
+trcpt816 = parm816{1}(1);
+slpe816 = parm816{1}(2);
+
+fid = fopen('parm_1632.txt','r');
+parm1632 = textscan(fid,'%f');
+fclose(fid);
+trcpt1632 = parm1632{1}(1);
+slpe1632 = parm1632{1}(2);
+
+k=1;
+l=1;
+m=1;
+n=1;
+p=1;
+
+for i = 1:length(A{2})
+  %tic
+  i
+  hdist = distance('gc',A{2}(i),A{3}(i),A{5}(i),A{6}(i))*111.1949;
+  vdist = A{4}(i);
+  distt = sqrt(hdist^2 + vdist^2);
+  if (A{7}(i) > 0 && A{8}(i) > 0 && A{9}(i) > 0 && A{10}(i) > 0)
+    if (distt >= 50 && distt < 100)
+      del1_3(k) = log10(A{7}(i)) - (trcpt24 + slpe24*log10(distt));
+      del1_6(k) = log10(A{8}(i)) - (trcpt48 + slpe48*log10(distt));
+      del1_12(k) = log10(A{9}(i)) - (trcpt816 + slpe816*log10(distt));
+      del1_24(k) = log10(A{10}(i)) - (trcpt1632 + slpe1632*log10(distt));
+      ind1(k) = i;
+      k = k + 1;
+    end
+    if (distt >= 100 && distt < 150)
+      del2_3(l) = log10(A{7}(i)) - (trcpt24 + slpe24*log10(distt));
+      del2_6(l) = log10(A{8}(i)) - (trcpt48 + slpe48*log10(distt));
+      del2_12(l) = log10(A{9}(i)) - (trcpt816 + slpe816*log10(distt));
+      del2_24(l) = log10(A{10}(i)) - (trcpt1632 + slpe1632*log10(distt));
+      ind2(l) = i;
+      l = l + 1;
+    end
+    if (distt >= 150 && distt < 200)
+      del3_3(m) = log10(A{7}(i)) - (trcpt24 + slpe24*log10(distt));
+      del3_6(m) = log10(A{8}(i)) - (trcpt48 + slpe48*log10(distt));
+      del3_12(m) = log10(A{9}(i)) - (trcpt816 + slpe816*log10(distt));
+      del3_24(m) = log10(A{10}(i)) - (trcpt1632 + slpe1632*log10(distt));
+      ind3(m) = i;
+      m = m + 1;
+    end
+    if (distt >= 200 && distt <= 250)
+      del4_3(n) = log10(A{7}(i)) - (trcpt24 + slpe24*log10(distt));
+      del4_6(n) = log10(A{8}(i)) - (trcpt48 + slpe48*log10(distt));
+      del4_12(n) = log10(A{9}(i)) - (trcpt816 + slpe816*log10(distt));
+      del4_24(n) = log10(A{10}(i)) - (trcpt1632 + slpe1632*log10(distt));
+      ind4(n) = i;
+      n = n + 1;
+    end
+    if (distt >= 50 && distt <= 250)
+      del5_3(p) = log10(A{7}(i)) - (trcpt24 + slpe24*log10(distt));
+      del5_6(p) = log10(A{8}(i)) - (trcpt48 + slpe48*log10(distt));
+      del5_12(p) = log10(A{9}(i)) - (trcpt816 + slpe816*log10(distt));
+      del5_24(p) = log10(A{10}(i)) - (trcpt1632 + slpe1632*log10(distt));
+      ind5(p) = i;
+      p = p + 1;
+    end
+  end
+end
+
+fid = fopen('ray1_2-4.txt','w');
+for i = 1:length(ind1)
+  fprintf(fid,'>-Z%f\n',del1_3(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind1(i)),A{2}(ind1(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind1(i)),A{5}(ind1(i)));
+end
+fclose(fid);
+
+fid = fopen('ray1_4-8.txt','w');
+for i = 1:length(ind1)
+  fprintf(fid,'>-Z%f\n',del1_6(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind1(i)),A{2}(ind1(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind1(i)),A{5}(ind1(i)));
+end
+fclose(fid);
+
+fid = fopen('ray1_8-16.txt','w');
+for i = 1:length(ind1)
+  fprintf(fid,'>-Z%f\n',del1_12(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind1(i)),A{2}(ind1(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind1(i)),A{5}(ind1(i)));
+end
+fclose(fid);
+
+fid = fopen('ray1_16-32.txt','w');
+for i = 1:length(ind1)
+  fprintf(fid,'>-Z%f\n',del1_24(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind1(i)),A{2}(ind1(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind1(i)),A{5}(ind1(i)));
+end
+fclose(fid);
+
+
+
+fid = fopen('ray2_2-4.txt','w');
+for i = 1:length(ind2)
+  fprintf(fid,'>-Z%f\n',del2_3(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind2(i)),A{2}(ind2(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind2(i)),A{5}(ind2(i)));
+end
+fclose(fid);
+
+fid = fopen('ray2_4-8.txt','w');
+for i = 1:length(ind2)
+  fprintf(fid,'>-Z%f\n',del2_6(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind2(i)),A{2}(ind2(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind2(i)),A{5}(ind2(i)));
+end
+fclose(fid);
+
+fid = fopen('ray2_8-16.txt','w');
+for i = 1:length(ind2)
+  fprintf(fid,'>-Z%f\n',del2_12(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind2(i)),A{2}(ind2(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind2(i)),A{5}(ind2(i)));
+end
+fclose(fid);
+
+fid = fopen('ray2_16-32.txt','w');
+for i = 1:length(ind2)
+  fprintf(fid,'>-Z%f\n',del2_24(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind2(i)),A{2}(ind2(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind2(i)),A{5}(ind2(i)));
+end
+fclose(fid);
+
+
+
+fid = fopen('ray3_2-4.txt','w');
+for i = 1:length(ind3)
+  fprintf(fid,'>-Z%f\n',del3_3(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind3(i)),A{2}(ind3(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind3(i)),A{5}(ind3(i)));
+end
+fclose(fid);
+
+fid = fopen('ray3_4-8.txt','w');
+for i = 1:length(ind3)
+  fprintf(fid,'>-Z%f\n',del3_6(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind3(i)),A{2}(ind3(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind3(i)),A{5}(ind3(i)));
+end
+fclose(fid);
+
+fid = fopen('ray3_8-16.txt','w');
+for i = 1:length(ind3)
+  fprintf(fid,'>-Z%f\n',del3_12(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind3(i)),A{2}(ind3(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind3(i)),A{5}(ind3(i)));
+end
+fclose(fid);
+
+fid = fopen('ray3_16-32.txt','w');
+for i = 1:length(ind3)
+  fprintf(fid,'>-Z%f\n',del3_24(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind3(i)),A{2}(ind3(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind3(i)),A{5}(ind3(i)));
+end
+fclose(fid);
+
+
+
+fid = fopen('ray4_2-4.txt','w');
+for i = 1:length(ind4)
+  fprintf(fid,'>-Z%f\n',del4_3(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind4(i)),A{2}(ind4(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind4(i)),A{5}(ind4(i)));
+end
+fclose(fid);
+
+fid = fopen('ray4_4-8.txt','w');
+for i = 1:length(ind4)
+  fprintf(fid,'>-Z%f\n',del4_6(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind4(i)),A{2}(ind4(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind4(i)),A{5}(ind4(i)));
+end
+fclose(fid);
+
+fid = fopen('ray4_8-16.txt','w');
+for i = 1:length(ind4)
+  fprintf(fid,'>-Z%f\n',del4_12(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind4(i)),A{2}(ind4(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind4(i)),A{5}(ind4(i)));
+end
+fclose(fid);
+
+fid = fopen('ray4_16-32.txt','w');
+for i = 1:length(ind4)
+  fprintf(fid,'>-Z%f\n',del4_24(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind4(i)),A{2}(ind4(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind4(i)),A{5}(ind4(i)));
+end
+fclose(fid);
+
+fid = fopen('ray5_2-4.txt','w');
+for i = 1:length(ind5)
+  fprintf(fid,'>-Z%f\n',del5_3(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind5(i)),A{2}(ind5(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind5(i)),A{5}(ind5(i)));
+end
+fclose(fid);
+
+fid = fopen('ray5_4-8.txt','w');
+for i = 1:length(ind5)
+  fprintf(fid,'>-Z%f\n',del5_6(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind5(i)),A{2}(ind5(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind5(i)),A{5}(ind5(i)));
+end
+fclose(fid);
+
+fid = fopen('ray5_8-16.txt','w');
+for i = 1:length(ind5)
+  fprintf(fid,'>-Z%f\n',del5_12(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind5(i)),A{2}(ind5(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind5(i)),A{5}(ind5(i)));
+end
+fclose(fid);
+
+fid = fopen('ray5_16-32.txt','w');
+for i = 1:length(ind5)
+  fprintf(fid,'>-Z%f\n',del5_24(i)); 
+  fprintf(fid,'%f %f\n',A{3}(ind5(i)),A{2}(ind5(i)));
+  fprintf(fid,'%f %f\n',A{6}(ind5(i)),A{5}(ind5(i)));
+end
+fclose(fid);
+
+clear all;
+
+EOF
+
+SOD
+
+# Z = [225.0000 175.0000 125.0000 75.0000]
+Z="75.0000"
+Zlo="50"
+Zhi="250"
+ind="5"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+gmt set COLOR_BACKGROUND = gray
+
+gmt set COLOR_FOREGROUND = gray
+
+PS1=map_ray_${ind}.ps
+REGION="20/29.5/34.5/39.5"
+SCALE=0.48i
+CPT="custom.cpt"
+
+gmt makecpt -Cblue,deepskyblue3,darkseagreen1,darkyellow,red,darkbrown -T-1.4/2.0/0.05 -Z > $CPT
+
+rm -f $PS1
+
+gmt psbasemap -Jm$SCALE -R$REGION -Bf0.5a1/f0.5a1:.:Wesn -Y11.0 -X1.0 -V -K >> $PS1
+gmt psxy ray${ind}_2-4.txt -R -J -W0.1p -C$CPT -V -O -K >> $PS1
+gmt pscoast -Jm$SCALE -R$REGION -Dh -W0.3p,black -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+awk '{print $1,$2 }' st_listf.txt > stlist.xy
+gmt psxy stlist.xy -J -R -W.1,black -St.2 -Ggreen -V -O -K >> $PS1
+
+echo "Distance = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.3/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 2-4 Hz" | gmt pstext -R -J -DJ0.3/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+
+gmt psbasemap -Jm$SCALE -R$REGION -Bf0.5a1/f0.5a1:.:wesn -Y0.0 -X13.3 -V -O -K >> $PS1
+gmt psxy ray${ind}_4-8.txt -R -J -W0.1p -C$CPT -V -O -K >> $PS1
+gmt pscoast -Jm$SCALE -R$REGION -Dh -W.3p,black -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+gmt psxy stlist.xy -J -R -W.1,black -St.2 -Ggreen -V -O -K >> $PS1
+
+echo "Distance = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.3/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 4-8 Hz" | gmt pstext -R -J -DJ0.3/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+
+gmt psbasemap -Jm$SCALE -R$REGION -Bf0.5a1/f0.5a1:.:WeSn -Y-10.0 -X-13.3 -V -O -K >> $PS1
+gmt psxy ray${ind}_8-16.txt -R -J -W0.1p -C$CPT -V -O -K >> $PS1
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,black -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+gmt psxy stlist.xy -J -R -W.1,black -St.2 -Ggreen -V -O -K >> $PS1
+
+echo "Distance = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.3/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 8-16 Hz" | gmt pstext -R -J -DJ0.3/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+
+
+gmt psbasemap -Jm$SCALE -R$REGION -Bf0.5a1/f0.5a1:.:weSn -Y0.0 -X13.3 -V -O -K >> $PS1
+gmt psxy ray${ind}_16-32.txt -R -J -W0.1p -C$CPT -V -O -K >> $PS1
+gmt pscoast -Jm$SCALE -R$REGION -Di -W.3p,black -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+gmt psxy stlist.xy -J -R -W.1,black -St.2 -Ggreen -V -O -K >> $PS1
+
+echo "Distance = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ0.3/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 16-32 Hz" | gmt pstext -R -J -DJ0.3/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+gmt psscale -DjRB+h+w2.5i/0.2i+o9.2/9.0 -R -J -B0.7 -By+l"Delta Log(Tp)" -C$CPT -O -V >> $PS1
+
+gmt psconvert $PS1 -A+m3c/3c/3c/3c -Tg
+
+evince $PS1

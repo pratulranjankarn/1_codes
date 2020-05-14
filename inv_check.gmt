@@ -1,0 +1,42 @@
+#!/bin/bash
+rm -f new24.nc SAegean_grd24.nc output24.grd
+# Z = [135.0000 75.0000 45.0000 15.0000]
+Z="135"
+Zlo="90"
+Zhi="Higher"
+ind="4"
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+awk '{print $2,$1,$3}' kappa_f${Z}fyn.txt > test.txt
+
+gmt grdmask test.txt -R -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15k -V
+gmt surface test.txt -R -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V
+
+PS1=kappa_invfyn_${ind}.ps
+REGION="20/29.5/34.5/39.5"
+SCALE=1.1i
+GRID="SAegean_grd24.nc"
+CPT="custom.cpt"
+
+gmt makecpt -Cno_green -T0.1/0.9/0.05 > $CPT
+
+rm -f $PS1
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:Wesn -n+c -V -K -Q -Y1.0 -X1.0 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Di -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+echo "Depth = "$Zlo"-"$Zhi" km" | gmt pstext -R -J -DJ1/0.5 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+echo "Freq = 2-4 Hz" | gmt pstext -R -J -DJ1/1.0 -F+cBL+f12p,Helvetica,black -O -V -K >> $PS1
+
+gmt psscale -DjRB+w2.5i/0.2i+o1.2/1.15 -R -J -B0.20:"log(aeta)": -C$CPT -O -V >> $PS1
+

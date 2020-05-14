@@ -1,0 +1,15 @@
+fid = fopen('nodes_24d.txt','r');
+B = textscan(fid,'%s %f %f %f %f','Headerlines',1);
+fclose(fid);
+
+fid = fopen('nodes_48d.txt','r');
+B = textscan(fid,'%s %f %f %f %f','Headerlines',1);
+fclose(fid);
+
+fid = fopen('nodes_816d.txt','r');
+B = textscan(fid,'%s %f %f %f %f','Headerlines',1);
+fclose(fid);
+
+fid = fopen('nodes_1632d.txt','r');
+B = textscan(fid,'%s %f %f %f %f','Headerlines',1);
+fclose(fid);

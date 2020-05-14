@@ -1,0 +1,33 @@
+#!/bin/bash
+
+gmt set MAP_FRAME_PEN = thickest,black
+
+gmt set FONT_LABEL = 12p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 12p,Helvetica,black
+
+gmt set MAP_FRAME_TYPE = fancy
+
+PS1=stkp_invfyn13.ps
+REGION="20/29.5/34.5/39.5"
+SCALE=1.1i
+GRID="SAegean_grd24.nc"
+CPT="custom.cpt"
+
+awk '{print $2,$1,$3}' s_kappa_final.txt > test.txt
+
+gmt grdmask test.txt -R$REGION -I0.01=/0.01= -NNaN/1/1 -Gnew24.nc -S15.726k -V
+gmt surface test.txt -R$REGION -I0.01=/0.01= -GSAegean_grd24.nc -T1.0 -V 
+
+
+gmt makecpt -Ccool -T0.001/0.25/0.005 -Z > $CPT
+
+rm -f $PS1
+
+gmt grdmath $GRID new24.nc OR = output24.grd
+
+gmt grdimage output24.grd -C$CPT -R$REGION -Jm$SCALE -Bf0.5a1/f0.5a1:.:Wesn -n+c -V -K -Q -Y1.0 -X1.0 >> $PS1
+
+gmt pscoast -Jm$SCALE -R$REGION -Dh -W0.3p,0/0/0 -N2p,0/0/0 --DIR_GSHHG=/home/user/GSHHG/gshhg-gmt-2.3.7 -Lg28/35+c37+w100+ar+f+l"Km" -V -O -K >> $PS1
+
+gmt psscale -DjRB+w2.5i/0.2i+o1.2/1.0 -R -J -B0.05 -By+l"kappa" -C$CPT -O -V >> $PS1

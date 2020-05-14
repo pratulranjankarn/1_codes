@@ -1,0 +1,143 @@
+#!/bin/bash
+
+export HDF5_DISABLE_VERSION_CHECK=2
+
+gmt set MAP_GRID_PEN_PRIMARY thinnest,grey,-
+
+gmt set FONT_LABEL = 16p,Helvetica,black
+
+gmt set FONT_ANNOT_PRIMARY = 16p,Helvetica,black
+
+gmt set PS_PAGE_ORIENTATION = Landscape
+
+rm -f plot.ps hist.ps
+
+awk '{ print $1,$2 }' delhyp_2-4.txt > test.txt
+
+{
+read W1 S1
+read W2 S2
+} < parm_24.txt
+
+echo $W1
+echo $S1
+
+
+rm -f plot24.ps
+gmt psbasemap -R40/300/1e-1/4e1 -JX5il/3.5il -BWnse -Bxa1pf3g3 -Bya1pf3g3+l'Delay time (s)' -V -K -Y11.5 -X2.3 >> plot.ps
+gmt psxy test.txt -R -J -Sc0.2 -W0.5p,black -N -O -V -K >> plot.ps
+gmt psxy Regg_24.txt -R -J -W3p,red -O -V -K >> plot.ps
+#gmt psxy Regg_24+.txt -R -J -W2p,green -O -V -K >> plot.ps
+#gmt psxy Regg_24-.txt -R -J -W2p,red -O -V -K >> plot.ps
+echo "Intercept= "${W1:0:5}" +- "${S1:0:5} | gmt pstext -R -J -DJ1.1/0.5 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "Slope= "${W2:0:5}" +- "${S2:0:5} | gmt pstext -R -J -DJ1.9/1.3 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "2-4 Hz" | gmt pstext -R -J -DJ1.8/1.0 -F+cBL+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+
+rm -f hist24.ps
+gmt psbasemap -R-1/1/0/1200 -JX4.9i/3.5i -Bxa0.2f0.1 -Bya200f50+l'Counts' -BWesn -V -K -Y11.5 -X2.5 >> hist.ps
+gmt pshistogram hist_24.txt -R -J -W0.05i -F -L0.5p -B -Gblue -O -V -K >> hist.ps
+gmt psxy gauss24.txt -R -J -W3p,red -O -V -K >> hist.ps
+echo "2-4 Hz" | gmt pstext -R -J -DJ1/1.0 -F+cTR+f16p,Helvetica-Bold,black -O -V -K >> hist.ps
+
+awk '{ print $1,$2 }' delhyp_4-8.txt > test.txt
+
+{ 
+read W1 S1
+read W2 S2
+} < parm_48.txt
+
+echo $W1
+echo $S1
+
+
+rm -f plot48.ps
+gmt psbasemap -R40/300/1e-1/4e1 -JX5il/3.5il -Bxa1pf3g3 -Bya1pf3g3+l'Delay time (s)' -Bwsne -V -O -K -Y0.0 -X14.3 >> plot.ps
+gmt psxy test.txt -R -J -Sc0.2 -W0.5p,black -N -O -V -K >> plot.ps
+gmt psxy Regg_48.txt -R -J -W3p,red -O -V -K >> plot.ps
+#gmt psxy Regg_48+.txt -R -J -W2p,green -O -V -K >> plot.ps
+#gmt psxy Regg_48-.txt -R -J -W2p,red -O -V -K >> plot.ps
+echo "Intercept= "${W1:0:5}" +- "${S1:0:5} | gmt pstext -R -J -DJ1.1/0.5 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "Slope= "${W2:0:5}" +- "${S2:0:5} | gmt pstext -R -J -DJ1.9/1.3 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "4-8 Hz" | gmt pstext -R -J -DJ1.8/1.0 -F+cBL+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+
+rm -f hist48.ps
+gmt psbasemap -R-1/1/0/1200 -JX4.9i/3.5i -Bxa0.2f0.1 -Bya200f50+l'Counts' -Bwsne -V -O -K -Y0.0 -X14.3 >> hist.ps
+gmt pshistogram hist_48.txt -R -J -W0.05i -F -L0.5p -B -Gblue -O -V -K >> hist.ps
+gmt psxy gauss48.txt -R -J -W3p,red -O -V -K >> hist.ps
+echo "4-8 Hz" | gmt pstext -R -J -DJ1/1.0 -F+cTR+f16p,Helvetica-Bold,black -O -V -K >> hist.ps
+
+awk '{ print $1,$2 }' delhyp_8-16.txt > test.txt
+
+{
+read W1 S1
+read W2 S2
+} < parm_816.txt
+
+echo $W1
+echo $S1
+
+
+rm -f plot816.ps
+gmt psbasemap -R40/300/1e-1/4e1 -JX5il/3.5il -Bxa2f3g3+l'Hypocentral Distance (km)' -Bya1pf3g3+l'Delay time (s)' -BWSne -V -O -K -Y-9.5 -X-14.3 >> plot.ps
+gmt psxy test.txt -R -J -Sc0.2 -W0.5p,black -N -O -V -K >> plot.ps
+gmt psxy Regg_816.txt -R -J -W3p,red -O -V -K >> plot.ps
+#gmt psxy Regg_816+.txt -R -J -W2p,green -O -V -K >> plot.ps
+#gmt psxy Regg_816-.txt -R -J -W2p,red -O -V -K >> plot.ps
+echo "Intercept= "${W1:0:5}" +- "${S1:0:5} | gmt pstext -R -J -DJ1.1/0.5 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "Slope= "${W2:0:5}" +- "${S2:0:5} | gmt pstext -R -J -DJ1.9/1.3 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "8-16 Hz" | gmt pstext -R -J -DJ1.8/1.0 -F+cBL+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+
+rm -f hist816.ps
+gmt psbasemap -R-1/1/0/1200 -JX4.9i/3.4i -Bxa0.2f0.1+l'@~D@~ log t@-p@- (s)' -Bya200f50+l'Counts' -BWSne -V -O -K -Y-9.5 -X-14.3 >> hist.ps
+gmt pshistogram hist_816.txt -R -J -W0.05i -F -L0.5p -B -Gblue -O -V -K >> hist.ps
+gmt psxy gauss816.txt -R -J -W3p,red -O -V -K >> hist.ps
+echo "8-16 Hz" | gmt pstext -R -J -DJ1/1.0 -F+cTR+f16p,Helvetica-Bold,black -O -V -K >> hist.ps
+
+#: <<EOF
+
+awk '{ print $1,$2 }' delhyp_16-32.txt > test.txt
+
+{
+read W1 S1
+read W2 S2
+} < parm_1632.txt
+
+echo $W1
+echo $S1
+
+
+rm -f plot1632.ps
+gmt psbasemap -R40/300/1e-1/4e1 -JX5il/3.5il -Bxa2f3g3+l'Hypocentral Distance (km)' -Bya1pf3g3 -BwSne -V -O -K -Y0.0 -X14.3 >> plot.ps
+echo "CHECK"
+echo "CHECK"
+echo "CHECK"
+gmt psxy test.txt -R -J -Sc0.2 -W0.5p,black -N -O -V -K >> plot.ps
+echo "CHECK"
+echo "CHECK"
+echo "CHECK"
+gmt psxy Regg_1632.txt -R -J -W3p,red -O -V -K >> plot.ps
+#gmt psxy Regg_1632+.txt -R -J -W2p,green -O -V -K >> plot.ps
+#gmt psxy Regg_1632-.txt -R -J -W2p,red -O -V -K >> plot.ps
+echo "Intercept= "${W1:0:5}" +- "${S1:0:5} | gmt pstext -R -J -DJ1.1/0.5 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "Slope= "${W2:0:5}" +- "${S2:0:5} | gmt pstext -R -J -DJ1.9/1.3 -F+cBR+f16p,Helvetica-Bold,black -O -V -K >> plot.ps
+echo "16-32 Hz" | gmt pstext -R -J -DJ1.8/1.0 -F+cBL+f16p,Helvetica-Bold,black -O -V >> plot.ps
+
+#gmt psconvert plot.ps -A+m3c/3c/3c/3c -Tg
+
+#gmt psconvert plot.ps -A+m3c/3c/3c/3c -Tjef
+
+rm -f hist1632.ps
+gmt psbasemap -R-1/1/0/1200 -JX4.9i/3.4i -Bxa0.2f0.1+l'@~D@~ log t@-p@- (s)' -Bya200f50 -BwSen -V -O -K -Y0.0 -X14.3 >> hist.ps
+gmt pshistogram hist_1632.txt -R -J -W0.05i -F -L0.5p -B -Gblue -O -V -K >> hist.ps
+gmt psxy gauss1632.txt -R -J -W3p,red -O -V -K >> hist.ps
+echo "16-32 Hz" | gmt pstext -R -J -DJ1/1.0 -F+cTR+f16p,Helvetica-Bold,black -O -V >> hist.ps
+EOF
+gmt psconvert plot.ps -A+m3c/3c/3c/3c -Tg
+
+gmt psconvert plot.ps -A+m3c/3c/3c/3c -Tjef
+
+gmt psconvert hist.ps -A+m3c/3c/3c/3c -Tg
+
+gmt psconvert hist.ps -A+m3c/3c/3c/3c -Tjef
+
+evince plot.ps hist.ps

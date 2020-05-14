@@ -1,0 +1,12 @@
+function 
+
+latlow = 20.5;
+lathig = 29.5;
+lonlow = 33.5;
+lonhig = 39.5;
+
+Lat = linspace(latlow,lathig,100);
+Long = linspace(lonlow,lonhig,100);
+Depth = linspace(
+
+end

@@ -1,0 +1,177 @@
+    function Var = calc_iter_prob(varargin)
+    ind = randi(n_kp);
+    kappa_bin2(j,:) = kappa_bin;
+    aeta_bin2(j,:) = aeta_bin;
+    kappa_bin2(j,ind) = normrnd(kappa_bin2(j,ind),0.1);
+    aeta_bin2(j,ind) = normrnd(aeta_bin2(j,ind),0.005);
+    C_k_bin = interp1(kappai,C_ki,kappa_bin2(j,:),'spline');
+    p_k_bin = interp1(kappai,p_ki,kappa_bin2(j,:),'spline');
+    bp_k_bin = interp1(kappai,bp_ki,kappa_bin2(j,:),'spline');
+    
+    aeta_binl = log10(aeta_bin);
+    C_k_binl = log10(C_k_bin);
+    p_k_bini = 1./p_k_bin;
+    bp_k_binl = log10(bp_k_bin);
+
+    lTp_calc3 = zeros(n_a,1);
+    lTp_calc6 = zeros(n_a,1);
+    lTp_calc12 = zeros(n_a,1);
+    lTp_calc24 = zeros(n_a,1);
+
+
+    parfor i = 1:n_a
+        alpha = ray_bin(i,:);
+        alpha(alpha==0) = [];
+        beta = bin_dist(i,:);
+        beta(beta==0) = [];
+        freq = 6;
+        n = length(alpha);
+        if (lTp_obs6(i) > 0)
+            lTp_calc6(i) = calc_delaytime(n,alpha,beta,freq,aeta_binl,C_k_binl,p_k_bini,bp_k_binl);
+        end
+        if ~isreal(lTp_calc6(i))
+            %ae = aeta_binl(alpha)
+            %ck = C_k_binl(alpha)
+            %pk = p_k_bini(alpha)
+            %bp = bp_k_binl(alpha)
+            lTp_calc6(i) = 0;
+        end
+        freq = 3;
+        if (lTp_obs3(i) > 0)
+            lTp_calc3(i) = calc_delaytime(n,alpha,beta,freq,aeta_binl,C_k_binl,p_k_bini,bp_k_binl);
+        end
+        if ~isreal(lTp_calc3(i))
+            %ae = aeta_binl(alpha)
+            %ck = C_k_binl(alpha)
+            %pk = p_k_bini(alpha)
+            %bp = bp_k_binl(alpha)
+            lTp_calc3(i) = 0;
+        end
+        freq = 12;
+        if (lTp_obs12(i) > 0)
+            lTp_calc12(i) = calc_delaytime(n,alpha,beta,freq,aeta_binl,C_k_binl,p_k_bini,bp_k_binl);
+        end
+        if ~isreal(lTp_calc12(i))
+            %ae = aeta_binl(alpha)
+            %ck = C_k_binl(alpha)
+            %pk = p_k_bini(alpha)
+            %bp = bp_k_binl(alpha)
+            lTp_calc12(i) = 0;
+        end
+        freq = 24;
+        if (lTp_obs24(i) > 0)
+            lTp_calc24(i) = calc_delaytime(n,alpha,beta,freq,aeta_binl,C_k_binl,p_k_bini,bp_k_binl);
+        end
+        if ~isreal(lTp_calc24(i))
+            %ae = aeta_binl(alpha)
+            %ck = C_k_binl(alpha)
+            %pk = p_k_bini(alpha)
+            %bp = bp_k_binl(alpha)
+            lTp_calc24(i) = 0;
+        end
+    end
+
+
+
+    Tp_error1 = sum((lTp_obs3-lTp_calc3).^2);
+    %Tp_error2 = sum((lTp_obs6-lTp_calc6).^2);
+    %Tp_error3 = sum((lTp_obs12-lTp_calc12).^2);
+    %Tp_error4 = sum((lTp_obs24-lTp_calc24).^2);
+
+    Tp_error = Tp_error1;
+
+    %A_f = [A{2} A{3} A{4} A{5} A{6} lTp_calc3 lTp_calc6 lTp_calc12 lTp_calc24];
+
+    B_freq_calc1 = zeros(length(B{2}),1);
+    B_freq_calc2 = zeros(length(C{2}),1);
+    B_freq_calc3 = zeros(length(D{2}),1);
+
+    for i = 1:n_b
+        C_f = find(strcmp(A{1},B{1}(i)) & A{4} >= 40 & A{4} < 55);
+        qw = length(C_f);
+        if qw > 0
+            Rat3 = log10(lTp_calc3(C_f)./lTp_calc6(C_f));
+            Rat6 = ones(qw,1);
+            Rat12 = log10(lTp_calc12(C_f)./lTp_calc6(C_f));
+            Rat24 = log10(lTp_calc24(C_f)./lTp_calc6(C_f));
+            Rat = [Rat3;Rat6;Rat12;Rat24];
+            mw = find(isinf(Rat));
+            Rat(mw) = [];
+            freq = [ones(qw,1)*log10(3);ones(qw,1)*log10(6);ones(qw,1)*log10(12);ones(qw,1)*log10(24)];
+            freq(mw) = [];
+            freqfit = [ones(length(Rat),1) freq];
+            parm = freqfit\Rat;
+            B_freq_calc1(i) = parm(2);
+        end
+    end
+
+    for i = 1:n_c
+        C_f = find(strcmp(A{1},C{1}(i)) & A{4} >= 55 & A{4} < 75);
+        qw = length(C_f);
+        if qw > 0
+            Rat3 = log10(lTp_calc3(C_f)./lTp_calc6(C_f));
+            Rat6 = ones(qw,1);
+            Rat12 = log10(lTp_calc12(C_f)./lTp_calc6(C_f));
+            Rat24 = log10(lTp_calc24(C_f)./lTp_calc6(C_f));
+            Rat = [Rat3;Rat6;Rat12;Rat24];
+            mw = find(isinf(Rat));
+            Rat(mw) = [];
+            freq = [ones(qw,1)*log10(3);ones(qw,1)*log10(6);ones(qw,1)*log10(12);ones(qw,1)*log10(24)];
+            freq(mw) = [];
+            freqfit = [ones(length(Rat),1) freq];
+            parm = freqfit\Rat;
+            B_freq_calc2(i) = parm(2);
+        end
+    end
+    for i = 1:n_d
+        C_f = find(strcmp(A{1},D{1}(i)) & A{4} >= 75 & A{4} < 250);
+        qw = length(C_f);
+        if qw > 0
+            Rat3 = log10(lTp_calc3(C_f)./lTp_calc6(C_f));
+            Rat6 = ones(qw,1);
+            Rat12 = log10(lTp_calc12(C_f)./lTp_calc6(C_f));
+            Rat24 = log10(lTp_calc24(C_f)./lTp_calc6(C_f));
+            Rat = [Rat3;Rat6;Rat12;Rat24];
+            mw = find(isinf(Rat));
+            Rat(mw) = [];
+            freq = [ones(qw,1)*log10(3);ones(qw,1)*log10(6);ones(qw,1)*log10(12);ones(qw,1)*log10(24)];
+            freq(mw) = [];
+            freqfit = [ones(length(Rat),1) freq];
+            parm = freqfit\Rat;
+            B_freq_calc3(i) = parm(2);
+        end
+    end
+
+    calc1 = sum((B_freq_calc1-B{4}).^2./B{5})/n_b;
+    calc2 = sum((B_freq_calc2-C{4}).^2./C{5})/n_c;
+    calc3 = sum((B_freq_calc3-D{4}).^2./D{5})/n_d;
+
+    calc_bf = w_bfreq * N_ray6 * (calc1 + calc2 + calc3);
+
+    sq1 = 1:num_points_dep:num_points_lat*num_points_long*num_points_dep;
+    sq2 = 2:num_points_dep:num_points_lat*num_points_long*num_points_dep;
+    sq3 = 3:num_points_dep:num_points_lat*num_points_long*num_points_dep;
+
+    Lkp1 = sum(del2(kappa_bin(sq1)).^2);
+    Lkp2 = sum(del2(kappa_bin(sq2)).^2);
+    Lkp3 = sum(del2(kappa_bin(sq3)).^2);
+
+    L_kp = w_kp * (Lkp1 + Lkp2 + Lkp3)/(num_points_lat*num_points_long*num_points_dep);
+    
+    L_e1 = sum(del2((2./(p_k_bin(sq1)-1)).*aeta_binl(sq1)*(-0.69897)).^2);
+    L_e2 = sum(del2((2./(p_k_bin(sq2)-1)).*aeta_binl(sq2)*(-0.69897)).^2);
+    L_e3 = sum(del2((2./(p_k_bin(sq3)-1)).*aeta_binl(sq3)*(-0.69897)).^2);
+
+    L_e = w_aeta * (L_e1 + L_e2 + L_e3)/(num_points_lat*num_points_long*num_points_dep);
+
+    L = N_ray6 * (L_e + L_kp);
+    
+    post_prob1 = -(calc_bf + L + Tp_error)/Temp; 
+    
+    accep_prob = min(1,exp(post_prob1-post_prob));
+    
+    if (accep_prob == 1 || accep_prob > rand(1))
+        kappa_bin = kappa_bin2(j,:);
+        aeta_bin = aeta_bin2(j,:);
+    end
+end
