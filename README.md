@@ -1,1 +1,1 @@
-# 1_codes
+Random inhomogeneities modeled using von-karman function
